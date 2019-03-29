@@ -1,0 +1,258 @@
+{
+	"info": {
+		"_postman_id": "69e10486-e8ea-4b7e-aa77-a64f957dcc14",
+		"name": "Ice And Fire",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "External books",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/external-books?page=1&per_page=6",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"external-books"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "per_page",
+							"value": "6"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "External book by name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/external-books?book=A Game of Thrones",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"external-books"
+					],
+					"query": [
+						{
+							"key": "book",
+							"value": "A Game of Thrones"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books: create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"My First Book\",\n\t\"isbn\":\"123-3213243567\",\n\t\"country\":\"United States\",\n\t\"number_of_pages\":\"350\",\n\t\"publisher\":\"Acme Books\",\n\t\"release_date\":\"2019-08-01\",\n\t\"authors\": [\"John Doe\"]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/books?name=My First Book&isbn=123-3213243567&country=United States&number_of_pages=350&publisher=Acme Books&release_date=2019-08-01",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"books"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "My First Book"
+						},
+						{
+							"key": "isbn",
+							"value": "123-3213243567"
+						},
+						{
+							"key": "country",
+							"value": "United States"
+						},
+						{
+							"key": "number_of_pages",
+							"value": "350"
+						},
+						{
+							"key": "publisher",
+							"value": "Acme Books"
+						},
+						{
+							"key": "release_date",
+							"value": "2019-08-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books: get all",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"My First Book\",\n\t\"isbn\":\"123-3213243567\",\n\t\"country\":\"United States\",\n\t\"number_of_pages\":\"350\",\n\t\"publisher\":\"Acme Books\",\n\t\"release_date\":\"2019-08-01\",\n\t\"authors\": [\"John Doe\"]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/books?",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"books"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "My First Book",
+							"disabled": true
+						},
+						{
+							"key": "isbn",
+							"value": "123-3213243567",
+							"disabled": true
+						},
+						{
+							"key": "country",
+							"value": "United States",
+							"disabled": true
+						},
+						{
+							"key": "number_of_pages",
+							"value": "350",
+							"disabled": true
+						},
+						{
+							"key": "publisher",
+							"value": "Acme Books",
+							"disabled": true
+						},
+						{
+							"key": "release_date",
+							"value": "2019-08-01",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books: delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/books/2?",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"2"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "My First Book",
+							"disabled": true
+						},
+						{
+							"key": "isbn",
+							"value": "123-3213243567",
+							"disabled": true
+						},
+						{
+							"key": "country",
+							"value": "United States",
+							"disabled": true
+						},
+						{
+							"key": "number_of_pages",
+							"value": "350",
+							"disabled": true
+						},
+						{
+							"key": "publisher",
+							"value": "Acme Books",
+							"disabled": true
+						},
+						{
+							"key": "release_date",
+							"value": "2019-08-01",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "0e6e5f25-f8f1-45df-95df-c01a1fe73b2b",
+			"key": "baseUrl",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}
