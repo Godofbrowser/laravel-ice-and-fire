@@ -8,3 +8,6 @@
 
 Route::get('books', 'BookController@index');
 Route::post('books', 'BookController@store');
+
+Route::get('books/{id}', 'BookController@show');
+Route::delete('books/{id}', 'BookController@destroy');

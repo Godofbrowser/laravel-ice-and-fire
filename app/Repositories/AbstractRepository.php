@@ -10,13 +10,14 @@ namespace App\Repositories;
 
 
 use App\Contracts\RepositoryContract;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractRepository implements RepositoryContract
 {
 	abstract public function instantiateModel(): Model;
 
-	public final function getQuery() {
+	public final function getQuery(): Builder {
 		return $this->instantiateModel()->query();
 	}
 }

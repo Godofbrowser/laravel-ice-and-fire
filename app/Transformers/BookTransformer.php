@@ -17,6 +17,7 @@ class BookTransformer extends AbstractTransformer
 	protected static function transform(array $data): array
 	{
 		return [
+			'id' => $data['id'],
 			'name' => $data['name'],
 			'isbn' => $data['isbn'],
 			'authors' => static::transformAuthors($data['authors'] ?? []),

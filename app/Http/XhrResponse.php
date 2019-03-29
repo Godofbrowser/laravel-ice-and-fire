@@ -37,18 +37,21 @@ class XhrResponse
 	}
 
 	public static function success(string $message, array $data = [], int $statusCode = null) {
+		$code = $statusCode ?? Response::HTTP_OK;
 		return response()->json([
 			'status' => 'success',
+			'status_code' => $code,
 			'message' => $message,
 			'data' => $data
-		], $statusCode ?? Response::HTTP_OK);
+		], $code);
 	}
 
 	public static function error(string $message = null, array $errors = [], int $statusCode = null) {
+		$code = $statusCode ?? Response::HTTP_UNPROCESSABLE_ENTITY;
 		return response()->json([
 			'status' => 'error',
 			'error' => $message ?? static::DEFAULT_ERROR_MESSAGE,
 			'errors' => $errors
-		], $statusCode ?? Response::HTTP_UNPROCESSABLE_ENTITY);
+		], $code);
 	}
 }

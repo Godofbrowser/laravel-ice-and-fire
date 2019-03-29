@@ -63,6 +63,13 @@ class BookRepo extends AbstractRepository implements BookRepoContract
 
 	public function delete(User $user = null, Book $model): bool
 	{
-		// TODO: Implement delete() method.
+		if (!$model->exists) return false;
+		return $model->delete();
+	}
+
+	public function findById(int $id): Book {
+		/** @var Book $book */
+		$book = $this->getQuery()->whereKey($id)->firstOrFail();
+		return $book;
 	}
 }

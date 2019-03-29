@@ -10,6 +10,7 @@ use App\Repositories\Contracts\BookRepoContract;
 use App\Transformers\BookTransformer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
 class BookController extends Controller
@@ -89,9 +90,12 @@ class BookController extends Controller
 
 		$book = $this->bookRepo->create($user, $data);
 		$book->load('authors', 'publisher');
+		$jsonData = BookTransformer::model($book->toArray());
+
+		unset($jsonData['id']);
 
 		return $this->xhrResponse()->createSuccess([
-			'book' => BookTransformer::model($book->toArray())
+			'book' => $jsonData
 		]);
 	}
 
@@ -104,7 +108,10 @@ class BookController extends Controller
 	 */
 	public function show($id)
 	{
-		//
+		$book = $this->bookRepo->findById($id);
+		$jsonData = BookTransformer::model($book->toArray());
+
+		return $this->xhrResponse()->fetchSuccess($jsonData);
 	}
 
 	/**
@@ -129,6 +136,12 @@ class BookController extends Controller
 	 */
 	public function destroy($id)
 	{
-		//
+		$book = $this->bookRepo->findById($id);
+		$bookName = $book->getAttributeValue('name');
+
+		$this->bookRepo->delete(null, $book);
+
+		$message = sprintf('The book %s was deleted successfully', $bookName);
+		return $this->xhrResponse()->success($message, [], Response::HTTP_NO_CONTENT);
 	}
 }
