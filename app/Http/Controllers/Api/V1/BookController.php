@@ -109,6 +109,7 @@ class BookController extends Controller
 	public function show($id)
 	{
 		$book = $this->bookRepo->findById($id);
+		$book->load('authors', 'publisher');
 		$jsonData = BookTransformer::model($book->toArray());
 
 		return $this->xhrResponse()->fetchSuccess($jsonData);

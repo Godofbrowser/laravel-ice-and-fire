@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Author;
 use App\Models\Book;
+use App\Transformers\BookTransformer;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -67,5 +68,24 @@ class BookTest extends TestCase
 
 		$response
 			->assertStatus(Response::HTTP_NO_CONTENT);
+	}
+
+    public function testCanRequestBookById() {
+		/** @var Book $book */
+		$book = factory(Book::class)->create();
+		$book->authors()->sync(factory(Author::class, 2)->create());
+		$book->load('authors', 'publisher');
+
+		$response = $this->json(
+			'GET',
+			'/api/v1/books/'. $book->id
+		);
+
+		$response
+			->assertStatus(Response::HTTP_OK)
+			->assertJson([
+				'status' => 'success',
+				'data' => BookTransformer::model($book->toArray())
+			]);
 	}
 }
