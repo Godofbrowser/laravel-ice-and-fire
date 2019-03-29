@@ -25,7 +25,7 @@ class IceAndFireController extends Controller
 	}
 
 	public function getBook(Request $request) {
-    	$book_name = $request->input('book');
+    	$book_name = $request->input('name');
     	$page = $request->input('page');
     	$page_size = $request->input('per_page');
 

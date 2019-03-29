@@ -56,5 +56,11 @@ class IceAndFireApiTest extends TestCase
 					'name' => 'A Game of Thrones'
 				]]
 			]);
+
+		$response->assertJsonMissing([
+			'data' => [[
+				'name' => 'A Storm of Swords'
+			]]
+		]);
     }
 }
