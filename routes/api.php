@@ -17,5 +17,16 @@ use Illuminate\Http\Request;
 //    return $request->user();
 //});
 
-require __DIR__ . '/api/services.php';
-require __DIR__ . '/api/v1.php';
+Route::group([
+	'namespace' => 'Services'
+], function() {
+	require __DIR__ . '/api/services.php';
+});
+
+Route::group([
+	'namespace' => 'V1',
+	'prefix' => 'v1'
+], function() {
+	require __DIR__ . '/api/v1.php';
+});
+

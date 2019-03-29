@@ -50,6 +50,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+		if ($exception instanceof ValidationException) {
+			return $this->validationExceptionHandler($request, $exception);
+		} elseif ($exception instanceof XhrException) {
+			return $this->xhrExceptionHandler($request, $exception);
+		}
+
         return parent::render($request, $exception);
     }
 
@@ -72,5 +78,31 @@ class Handler extends ExceptionHandler
 		}
 
 		return redirect()->back()->with('error', $exception->getApiMessage());
+	}
+
+	private function validationExceptionHandler(Request $request, ValidationException $exception)
+	{
+		if ($request->expectsJson()) {
+			return response()->json([
+				'error' => $exception->errorMessage(),
+				'errors' => $exception->errors(),
+				'messages' => $exception->hasValidationMessages() ? $exception->errorMessages() : [],
+			], Response::HTTP_BAD_REQUEST);
+		}
+
+		return redirect($exception->redirectTo ?? url()->previous())
+			->withInput($request->except($this->dontFlash))
+			->with('error', $exception->errorMessage())
+			->withErrors($exception->errors(), $exception->errorBag);
+	}
+
+	private function xhrExceptionHandler(Request $request, XhrException $exception)
+	{
+		return response()->json([
+			'status' => 'error',
+			'error' => $exception->getMessage(),
+			'errors' => $exception->hasValidator() ? $exception->getValidationErrors() : [],
+			'messages' => $exception->hasValidator() ? $exception->getValidationMessages() : [],
+		], $exception->getCode());
 	}
 }

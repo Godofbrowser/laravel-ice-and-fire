@@ -6,4 +6,4 @@
  * Time: 6:46 PM
  */
 
-Route::get('external-books', 'Services\IceAndFireController@getBook');
+Route::get('external-books', 'IceAndFireController@getBook');

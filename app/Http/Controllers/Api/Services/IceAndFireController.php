@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Services;
 
-use App\Http\XhrResponse;
 use App\Services\IceAndFire\Contracts\IceAndFireContract;
 use App\Transformers\IceAndFire\BookTransformer;
 use Illuminate\Http\Request;
@@ -33,6 +32,6 @@ class IceAndFireController extends Controller
 		$books = $this->iceAndFireService->findBooksByName($book_name, $page, $page_size);
 		$books = BookTransformer::collection($books);
 
-		return XhrResponse::fetchSuccess($books);
+		return $this->xhrResponse()->fetchSuccess($books);
 	}
 }
