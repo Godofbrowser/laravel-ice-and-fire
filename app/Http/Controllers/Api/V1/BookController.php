@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Author;
-use App\Models\Publisher;
-use App\Repositories\AuthorRepo;
 use App\Repositories\BookRepo;
+use App\Repositories\Contracts\AuthorRepoContract;
 use App\Repositories\Contracts\BookRepoContract;
+use App\Repositories\Contracts\PublisherRepoContract;
 use App\Transformers\BookTransformer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,15 +18,31 @@ class BookController extends Controller
 	 * @var \App\Repositories\Contracts\BookRepoContract
 	 */
 	private $bookRepo;
+	/**
+	 * @var \App\Repositories\Contracts\AuthorRepoContract
+	 */
+	private $authorRepo;
+	/**
+	 * @var \App\Repositories\Contracts\PublisherRepoContract
+	 */
+	private $publisherRepo;
 
 	/**
 	 * BookController constructor.
 	 *
 	 * @param \App\Repositories\Contracts\BookRepoContract $bookRepo
+	 * @param \App\Repositories\Contracts\AuthorRepoContract $authorRepo
+	 * @param \App\Repositories\Contracts\PublisherRepoContract $publisherRepo
 	 */
-	public function __construct(BookRepoContract $bookRepo)
+	public function __construct(
+		BookRepoContract $bookRepo,
+		AuthorRepoContract $authorRepo,
+		PublisherRepoContract $publisherRepo
+	)
 	{
 		$this->bookRepo = $bookRepo;
+		$this->authorRepo = $authorRepo;
+		$this->publisherRepo = $publisherRepo;
 	}
 
 	/**
@@ -76,16 +91,18 @@ class BookController extends Controller
 		})->toArray();
 
 		// Get publisher's model id
-		$data['publisher_id'] = Publisher::query()->firstOrCreate([
-			'name' => $data['publisher']
-		])->getKey();
+		$data['publisher_id'] = $this->publisherRepo
+			->firstOrCreate($user, [
+				'name' => $data['publisher']
+			])->getKey();
 
 		// Get authors model ids
 		$data['author_ids'] = Collection::make($data['authors'])
-			->map(function ($item) {
-				return Author::query()->firstOrCreate([
-					'name' => $item['name']
-				])->getKey();
+			->map(function ($item) use ($user) {
+				return $this->authorRepo
+					->firstOrCreate($user, [
+						'name' => $item['name']
+					])->getKey();
 			});
 
 		$book = $this->bookRepo->create($user, $data);
