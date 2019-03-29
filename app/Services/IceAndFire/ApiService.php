@@ -16,21 +16,20 @@ use GuzzleHttp\Exception\BadResponseException;
 
 class ApiService implements IceAndFireContract
 {
-	private $client;
 	const REQUEST_TYPE_GET = 'get';
 	const REQUEST_TYPE_POST = 'post';
+
+	private $client;
 
 	/**
 	 * IceAndFireService constructor.
 	 *
-	 * @param string $api_base_url
+	 * @param \GuzzleHttp\Client $client
+	 *
 	 */
-	public function __construct(string $api_base_url)
+	public function __construct(Client $client)
 	{
-		$this->client = new Client([
-			// Base URI is used with relative requests
-			'base_uri' => $api_base_url,
-		]);
+		$this->client = $client;
 	}
 
 	private function makeRequest($type, $endpoint, $options = [])

@@ -3,6 +3,7 @@
 namespace App\Services\IceAndFire;
 
 use App\Services\IceAndFire\Contracts\IceAndFireContract;
+use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
 class IceAndFireServiceProvider extends ServiceProvider
@@ -17,7 +18,11 @@ class IceAndFireServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(IceAndFireContract::class, function() {
-        	return new ApiService(self::API_BASE);
+			$httpClient = new Client([
+				// Base URI is used with relative requests
+				'base_uri' => self::API_BASE,
+			]);
+        	return new ApiService($httpClient);
 		});
     }
 
