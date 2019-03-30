@@ -33,13 +33,13 @@ class PublisherRepo extends AbstractRepository implements PublisherRepoContract
 		];
 	}
 
-	public function create(User $user = null, array $data): Publisher {
+	public function create(User $user = null, array $data): Model {
 		/** @var Publisher $model */
 		$model =  $this->getQuery()->create($data);
 		return $model;
 	}
 
-	public function firstOrCreate(User $user = null, array $data): Publisher
+	public function firstOrCreate(User $user = null, array $data): Model
 	{
 		/** @var Publisher $model */
 		$model = $this->getQuery()->where($data)->first();
@@ -50,18 +50,22 @@ class PublisherRepo extends AbstractRepository implements PublisherRepoContract
 		return $model;
 	}
 
-	public function update(User $user = null, array $data): Publisher
+	public function update(User $user = null, Model $model, array $data): Model
 	{
-		// TODO: Implement update() method.
+		$model->fill($data)->save();
+		return $model;
 	}
 
-	public function delete(User $user = null, Publisher $model): bool
+	public function delete(User $user = null, Model $model): bool
 	{
-		// TODO: Implement delete() method.
+		if (!$model->exists) return false;
+		return $model->delete() ?? false;
 	}
 
-	public function findById(int $id): Publisher
+	public function findById(int $id): Model
 	{
-		// TODO: Implement findById() method.
+		/** @var Publisher $model */
+		$model = $this->getQuery()->whereKey($id)->firstOrFail();
+		return $model;
 	}
 }

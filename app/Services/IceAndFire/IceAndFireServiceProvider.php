@@ -17,7 +17,7 @@ class IceAndFireServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(IceAndFireContract::class, function() {
+        $this->app->singleton(IceAndFireContract::class, function() {
 			$httpClient = new Client([
 				// Base URI is used with relative requests
 				'base_uri' => self::API_BASE,

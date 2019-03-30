@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Http\XhrResponse;
 use App\Services\IceAndFire\Exceptions\ApiException as IceAndFireApiException;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,6 +18,8 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
+    	XhrException::class,
+		ValidationException::class,
 		IceAndFireApiException::class
     ];
 
@@ -41,15 +44,21 @@ class Handler extends ExceptionHandler
         parent::report($exception);
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
-     */
+	/**
+	 * Render an exception into an HTTP response.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  \Exception $exception
+	 *
+	 * @return \Illuminate\Http\Response
+	 * @throws \App\Exceptions\XhrException
+	 */
     public function render($request, Exception $exception)
     {
+		if ($exception instanceof ModelNotFoundException && $request->expectsJson()) {
+			throw XhrException::modelNotFound();
+		}
+
 		if ($exception instanceof ValidationException) {
 			return $this->validationExceptionHandler($request, $exception);
 		} elseif ($exception instanceof XhrException) {

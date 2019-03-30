@@ -36,8 +36,8 @@ class AppServiceProvider extends ServiceProvider
 
 	private function registerModelRepositories()
 	{
-		$this->app->bind(BookRepoContract::class, BookRepo::class);
-		$this->app->bind(AuthorRepoContract::class, AuthorRepo::class);
-		$this->app->bind(PublisherRepoContract::class, PublisherRepo::class);
+		$this->app->singleton(BookRepoContract::class, BookRepo::class);
+		$this->app->singleton(AuthorRepoContract::class, AuthorRepo::class);
+		$this->app->singleton(PublisherRepoContract::class, PublisherRepo::class);
 	}
 }

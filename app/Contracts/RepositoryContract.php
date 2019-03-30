@@ -9,10 +9,12 @@
 namespace App\Contracts;
 
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
-interface RepositoryContract
+interface RepositoryContract extends
+	RepositoryReadContract,
+	RepositoryWriteContract,
+	RepositoryValidationContract
 {
-	public static function resourceCreateRule();
-	public static function resourceUpdateRule(Model $model);
+	public function getQuery(): Builder;
 }
