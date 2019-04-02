@@ -4,11 +4,15 @@
 
 ### Installation
  - Clone the repo
+ - Change directory to the cloned project folder
  - Run: `composer install` command
- - Create a database
  - Copy .env.example to .env
- - Configure .env with database credentials
  - Run: `php artisan key:generate`
+ - Create a database
+ - Configure .env with database credentials
+   - DB_DATABASE=yourDatabaseName
+   - DB_USERNAME=yourMysqlUsername
+   - DB_PASSWORD=yourPassword
  - Run: `php artisan optimize`
  - Run: `php artisan migrate`
  - Run: `php artisan serve`
