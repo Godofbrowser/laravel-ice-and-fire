@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\User;
 use App\Repositories\BookRepo;
 use App\Repositories\Contracts\AuthorRepoContract;
 use App\Repositories\Contracts\BookRepoContract;
@@ -55,8 +56,10 @@ class BookController extends Controller
 		$books = $this->bookRepo
 			->getQuery()
 			->with('authors', 'publisher')
-			->paginate(24)
-			->toArray();
+			->paginate(24);
+
+		/** @var mixed $books */
+		$books = $books->toArray();
 
 		$books['data'] = BookTransformer::collection($books['data']);
 
@@ -91,19 +94,10 @@ class BookController extends Controller
 		})->toArray();
 
 		// Get publisher's model id
-		$data['publisher_id'] = $this->publisherRepo
-			->firstOrCreate($user, [
-				'name' => $data['publisher']
-			])->getKey();
+		$data['publisher_id'] = $this->parsePublisherIdFromName($user, $data['publisher']);
 
 		// Get authors model ids
-		$data['author_ids'] = Collection::make($data['authors'])
-			->map(function ($item) use ($user) {
-				return $this->authorRepo
-					->firstOrCreate($user, [
-						'name' => $item['name']
-					])->getKey();
-			});
+		$data['author_ids'] = $this->parseAuthorIdsFromNames($user, $data['authors']);
 
 		$book = $this->bookRepo->create($user, $data);
 		$book->load('authors', 'publisher');
@@ -142,7 +136,40 @@ class BookController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		//
+		$user = $request->user();
+
+		$book = $this->bookRepo->findById($id);
+
+		// Validate entire payload
+		$data = $this->validateXhrRequest($request, BookRepo::resourceUpdateRule($book));
+
+		// Get authors model ids
+		if (array_key_exists('authors', $data)) {
+			// Validate Authors array
+			$data['authors'] = collect($data['authors'])->map(function ($item, $idx) {
+				$nth = ordinal_number($idx + 1);
+				return $this->validateXhrRequest(
+					['name' => $item],
+					['name' => 'required|string'],
+					[],
+					['name' => $nth . ' author\'s name']
+				);
+			})->toArray();
+
+			$data['author_ids'] = $this->parseAuthorIdsFromNames($user, $data['authors']);
+		}
+
+		// Get publisher's model id
+		if (array_key_exists('publisher', $data)) {
+			$data['publisher_id'] = $this->parsePublisherIdFromName($user, $data['publisher']);
+		}
+
+		$this->bookRepo->update($user, $book, $data);
+
+		$book->load('authors', 'publisher');
+		$jsonData = BookTransformer::model($book->toArray());
+
+		return $this->xhrResponse()->saveSuccess($jsonData);
 	}
 
 	/**
@@ -161,5 +188,22 @@ class BookController extends Controller
 
 		$message = sprintf('The book %s was deleted successfully', $bookName);
 		return $this->xhrResponse()->success($message, [], Response::HTTP_NO_CONTENT);
+	}
+
+	private function parsePublisherIdFromName(User $user = null, string $name) {
+		return $this->publisherRepo
+			->firstOrCreate($user, [
+				'name' => $name
+			])->getKey();
+	}
+
+	private function parseAuthorIdsFromNames(User $user = null, array $names) {
+		return Collection::make($names)
+			->map(function ($item) use ($user) {
+				return $this->authorRepo
+					->firstOrCreate($user, [
+						'name' => $item['name']
+					])->getKey();
+			});
 	}
 }

@@ -9,16 +9,8 @@
 namespace App\Repositories\Contracts;
 
 
-use App\Models\Author;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
+use App\Contracts\RepositoryContract;
 
-interface AuthorRepoContract
+interface AuthorRepoContract extends RepositoryContract
 {
-	public function getQuery(): Builder;
-	public function create(User $user = null, array $data): Author;
-	public function firstOrCreate(User $user = null, array $data): Author;
-	public function update(User $user = null, array $data): Author;
-	public function delete(User $user = null, Author $model): bool;
-	public function findById(int $id): Author;
 }

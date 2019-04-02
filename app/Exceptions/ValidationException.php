@@ -9,13 +9,13 @@
 
 namespace App\Exceptions;
 
-use Exception;
+use RuntimeException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
-class ValidationException extends Exception
+class ValidationException extends RuntimeException
 {
 	/**
 	 * The validator instance.

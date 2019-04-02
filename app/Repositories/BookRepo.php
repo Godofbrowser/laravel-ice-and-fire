@@ -13,6 +13,7 @@ use App\Models\Book;
 use App\Models\User;
 use App\Repositories\Contracts\BookRepoContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class BookRepo extends AbstractRepository implements BookRepoContract
 {
@@ -36,17 +37,17 @@ class BookRepo extends AbstractRepository implements BookRepoContract
 	public static function resourceUpdateRule(Model $model) {
 		$isbn = $model->getOriginal('isbn');
 		return [
-			'name' => 'required',
-			'isbn' => "required|string|regex:/\d{3}\-\d{10}/unique:books,isbn,{$isbn}",
-			'country' => 'required',
-			'number_of_pages' => 'required',
-			'publisher' => 'required',
-			'release_date' => 'required',
-			'authors' => 'required|array'
+			'name' => 'nullable|string',
+			'isbn' => "nullable|string|regex:/\d{3}\-\d{10}/|unique:books,isbn,{$isbn}",
+			'country' => 'nullable|string',
+			'number_of_pages' => 'nullable|integer',
+			'publisher' => 'nullable|string',
+			'release_date' => 'nullable',
+			'authors' => 'nullable|array'
 		];
 	}
 
-	public function create(User $user = null, array $data): Book {
+	public function create(User $user = null, array $data): Model {
 		$authorIds = $data['author_ids'];
 
 		/** @var Book $book */
@@ -56,20 +57,39 @@ class BookRepo extends AbstractRepository implements BookRepoContract
 		return $book;
 	}
 
-	public function update(User $user = null, array $data): Book
+	public function update(User $user = null, Model $model, array $data): Model
 	{
-		// TODO: Implement update() method.
+		$authorIds = Arr::get($data, 'author_ids', null);
+
+		/** @var Book $book */
+		$book = $model->fill($data);
+
+		if (!is_null($authorIds))
+			$book->authors()->sync($authorIds);
+
+		return $book;
 	}
 
-	public function delete(User $user = null, Book $model): bool
+	public function delete(User $user = null, Model $model): bool
 	{
 		if (!$model->exists) return false;
-		return $model->delete();
+		return $model->delete() ?? false;
 	}
 
-	public function findById(int $id): Book {
-		/** @var Book $book */
-		$book = $this->getQuery()->whereKey($id)->firstOrFail();
-		return $book;
+	public function findById(int $id, $firstOrFail = false): Model {
+		/** @var Book $model */
+		$model = $this->getQuery()->whereKey($id)->firstOrFail();
+		return $model;
+	}
+
+	public function firstOrCreate(User $user = null, array $data): Model
+	{
+		/** @var Book $model */
+		$model = $this->getQuery()->where($data)->first();
+
+		if (!$model)
+			$model = $this->create($user, $data);
+
+		return $model;
 	}
 }

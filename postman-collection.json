@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "69e10486-e8ea-4b7e-aa77-a64f957dcc14",
+		"_postman_id": "607e3abc-f12f-4700-90a1-c1559b96872e",
 		"name": "Ice And Fire",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -9,7 +9,18 @@
 			"name": "External books",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X-Requested-With",
+						"value": "XMLHttpRequest",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": ""
@@ -41,13 +52,24 @@
 			"name": "External book by name",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X-Requested-With",
+						"value": "XMLHttpRequest",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/external-books?book=A Game of Thrones",
+					"raw": "{{baseUrl}}/api/external-books?name=A Game of Thrones",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -57,7 +79,7 @@
 					],
 					"query": [
 						{
-							"key": "book",
+							"key": "name",
 							"value": "A Game of Thrones"
 						}
 					]
@@ -74,6 +96,11 @@
 						"key": "Content-Type",
 						"name": "Content-Type",
 						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X-Requested-With",
+						"value": "XMLHttpRequest",
 						"type": "text"
 					}
 				],
@@ -123,13 +150,21 @@
 		},
 		{
 			"name": "Books: get all",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [
 					{
 						"key": "Content-Type",
 						"name": "Content-Type",
 						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X-Requested-With",
+						"value": "XMLHttpRequest",
 						"type": "text"
 					}
 				],
@@ -138,7 +173,7 @@
 					"raw": "{\n\t\"name\":\"My First Book\",\n\t\"isbn\":\"123-3213243567\",\n\t\"country\":\"United States\",\n\t\"number_of_pages\":\"350\",\n\t\"publisher\":\"Acme Books\",\n\t\"release_date\":\"2019-08-01\",\n\t\"authors\": [\"John Doe\"]\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/books?",
+					"raw": "{{baseUrl}}/api/v1/books",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -184,6 +219,175 @@
 			"response": []
 		},
 		{
+			"name": "Books: update name",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X-Requested-With",
+						"value": "XMLHttpRequest",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"My First Updated Book\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/books/1?",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"1"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "My First Updated Book",
+							"disabled": true
+						},
+						{
+							"key": "isbn",
+							"value": "123-3213243567",
+							"disabled": true
+						},
+						{
+							"key": "country",
+							"value": "United States",
+							"disabled": true
+						},
+						{
+							"key": "number_of_pages",
+							"value": "350",
+							"disabled": true
+						},
+						{
+							"key": "publisher",
+							"value": "Acme Books",
+							"disabled": true
+						},
+						{
+							"key": "release_date",
+							"value": "2019-08-01",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books: update authors",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Requested-With",
+						"type": "text",
+						"value": "XMLHttpRequest"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"authors\": [\"John Doe\", \"Jane Doe\"]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/books/1?",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"1"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "My First Updated Book",
+							"disabled": true
+						},
+						{
+							"key": "isbn",
+							"value": "123-3213243567",
+							"disabled": true
+						},
+						{
+							"key": "country",
+							"value": "United States",
+							"disabled": true
+						},
+						{
+							"key": "number_of_pages",
+							"value": "350",
+							"disabled": true
+						},
+						{
+							"key": "publisher",
+							"value": "Acme Books",
+							"disabled": true
+						},
+						{
+							"key": "release_date",
+							"value": "2019-08-01",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books: update publisher",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Requested-With",
+						"type": "text",
+						"value": "XMLHttpRequest"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"publisher\": \"Chinua Achibe\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/books/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Books: delete",
 			"request": {
 				"method": "DELETE",
@@ -192,6 +396,11 @@
 						"key": "Content-Type",
 						"name": "Content-Type",
 						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X-Requested-With",
+						"value": "XMLHttpRequest",
 						"type": "text"
 					}
 				],
@@ -247,9 +456,31 @@
 			"response": []
 		}
 	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "9b94e4ba-d845-4a4d-9b34-c03c04b8f872",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "2e4ff3d1-5bad-4b9e-8309-4facd82cd282",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
-			"id": "0e6e5f25-f8f1-45df-95df-c01a1fe73b2b",
+			"id": "b88000ec-6b8a-4208-b178-494e47037ff6",
 			"key": "baseUrl",
 			"value": "http://localhost:8000",
 			"type": "string"

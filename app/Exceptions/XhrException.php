@@ -9,11 +9,11 @@
 namespace App\Exceptions;
 
 
-use Exception;
 use Illuminate\Contracts\Validation\Validator;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
 
-class XhrException extends Exception
+class XhrException extends RuntimeException
 {
 	protected $validator;
 
